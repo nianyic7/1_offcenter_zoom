@@ -1,0 +1,184 @@
+{
+ "_comment": "Machine-readable six-run manifest for doc/off_nuclear_tde_first_round_runs.md. Masses: seed_* in physical Msun under the PROVISIONAL reading (open decision, PROGRESS.md); code units are 1e10 Msun/h (x h/1e10). MinFoFMassForNewSeed is in 1e10 Msun/h. Every run = runs/templates/zf4_tde + only the listed --set values (+ InitCondFile for ZF4_H). Diff each variant against its fid before launch.",
+ "template": "runs/templates/zf4_tde",
+ "code": {
+  "repo": "~/arepo",
+  "branch": "BHspin_feedback_NC",
+  "commit_min": "a71e393f83",
+  "flags_added": [
+   "BH_DF_DISCRETE",
+   "HIGHER_DYNAMICAL_SEED_MASS",
+   "MERGE_BHS_WITHIN_GAS_SOFTENING",
+   "RELATIVE_VELOCITY_CRITERION_FOR_MERGERS",
+   "OUTPUT_BLACKHOLE_KINEMATICS"
+  ],
+  "flags_removed": [
+   "BH_NEW_CENTERING"
+  ]
+ },
+ "ic_sets": {
+  "ZF4_L": {
+   "bin_log10_M_Msun": [
+    12.75,
+    13.0
+   ],
+   "file": "ics_targethalos_LtU_L500_M12.75-13.00_H5_Zf4_000.hdf5",
+   "library": "/virgotng/mpa/LtU/ICs/FlagshipZoomICs/",
+   "run_path": "~/scratch1/MultiZoomICs/",
+   "size_GB": 1.81,
+   "NumPart": {
+    "type1_hr_DM": 36837120,
+    "type2": 616675,
+    "type3": 16921943
+   },
+   "m_hr_DM_code": 0.00020764,
+   "m_type2_code": 0.01328927,
+   "z_start": 63,
+   "parent": "MTNG-L500-4320-A snap 269, targets inputfiles/targethalos_LtU_L500_M12.75-13.00_H5_Zf4.txt (Gadget-4 NGENIC_ZOOMICS, Zf=4, EnlargeHighResFactor 2.5)"
+  },
+  "ZF4_H": {
+   "bin_log10_M_Msun": [
+    13.0,
+    13.25
+   ],
+   "file": "ics_targethalos_LtU_L500_M13.00-13.25_H5_Zf4_000.hdf5",
+   "library": "/virgotng/mpa/LtU/ICs/FlagshipZoomICs/",
+   "run_path": "~/scratch1/MultiZoomICs/",
+   "size_GB": 2.37,
+   "NumPart": {
+    "type1_hr_DM": 54058240,
+    "type2": 1011208,
+    "type3": 16985881
+   },
+   "m_hr_DM_code": 0.00020764,
+   "m_type2_code": 0.01328927,
+   "z_start": 63,
+   "parent": "MTNG-L500-4320-A snap 269, targets inputfiles/targethalos_LtU_L500_M13.00-13.25_H5_Zf4.txt"
+  }
+ },
+ "common": {
+  "SeedBlackHoleMass": "3.387e-5",
+  "seed_mass_Msun": 500000.0,
+  "MinDistanceForMergingBlackHoles": "2",
+  "DesNumNgbBlackHole": "156"
+ },
+ "runs": [
+  {
+   "label": "TDE_ZF4_L_FID",
+   "dir": "runs/ZF4_L/fid",
+   "ic_set": "ZF4_L",
+   "jobname": "zf4Lfid",
+   "set": {},
+   "DynamicalSeedBlackHoleMass": "4.0644e-4",
+   "MinFoFMassForNewSeed": "1.0",
+   "dyn_seed_Msun": 6000000.0,
+   "threshold_Msun_h": 10000000000.0,
+   "required": true
+  },
+  {
+   "label": "TDE_ZF4_L_DYN12",
+   "dir": "runs/ZF4_L/dyn12",
+   "ic_set": "ZF4_L",
+   "jobname": "zf4Ldyn",
+   "set": {
+    "DynamicalSeedBlackHoleMass": "8.1288e-4"
+   },
+   "DynamicalSeedBlackHoleMass": "8.1288e-4",
+   "MinFoFMassForNewSeed": "1.0",
+   "dyn_seed_Msun": 12000000.0,
+   "threshold_Msun_h": 10000000000.0,
+   "required": true
+  },
+  {
+   "label": "TDE_ZF4_L_SEED50",
+   "dir": "runs/ZF4_L/seed50",
+   "ic_set": "ZF4_L",
+   "jobname": "zf4Lsd50",
+   "set": {
+    "MinFoFMassForNewSeed": "5.0"
+   },
+   "DynamicalSeedBlackHoleMass": "4.0644e-4",
+   "MinFoFMassForNewSeed": "5.0",
+   "dyn_seed_Msun": 6000000.0,
+   "threshold_Msun_h": 50000000000.0,
+   "required": true
+  },
+  {
+   "label": "TDE_ZF4_H_FID",
+   "dir": "runs/ZF4_H/fid",
+   "ic_set": "ZF4_H",
+   "jobname": "zf4Hfid",
+   "set": {
+    "InitCondFile": "$HOME/scratch1/MultiZoomICs/ics_targethalos_LtU_L500_M13.00-13.25_H5_Zf4_000"
+   },
+   "DynamicalSeedBlackHoleMass": "4.0644e-4",
+   "MinFoFMassForNewSeed": "1.0",
+   "dyn_seed_Msun": 6000000.0,
+   "threshold_Msun_h": 10000000000.0,
+   "required": true
+  },
+  {
+   "label": "TDE_ZF4_H_DYN12",
+   "dir": "runs/ZF4_H/dyn12",
+   "ic_set": "ZF4_H",
+   "jobname": "zf4Hdyn",
+   "set": {
+    "InitCondFile": "$HOME/scratch1/MultiZoomICs/ics_targethalos_LtU_L500_M13.00-13.25_H5_Zf4_000",
+    "DynamicalSeedBlackHoleMass": "8.1288e-4"
+   },
+   "DynamicalSeedBlackHoleMass": "8.1288e-4",
+   "MinFoFMassForNewSeed": "1.0",
+   "dyn_seed_Msun": 12000000.0,
+   "threshold_Msun_h": 10000000000.0,
+   "required": true
+  },
+  {
+   "label": "TDE_ZF4_H_SEED50",
+   "dir": "runs/ZF4_H/seed50",
+   "ic_set": "ZF4_H",
+   "jobname": "zf4Hsd50",
+   "set": {
+    "InitCondFile": "$HOME/scratch1/MultiZoomICs/ics_targethalos_LtU_L500_M13.00-13.25_H5_Zf4_000",
+    "MinFoFMassForNewSeed": "5.0"
+   },
+   "DynamicalSeedBlackHoleMass": "4.0644e-4",
+   "MinFoFMassForNewSeed": "5.0",
+   "dyn_seed_Msun": 6000000.0,
+   "threshold_Msun_h": 50000000000.0,
+   "required": true
+  },
+  {
+   "label": "TDE_ZF4_L_X",
+   "dir": "runs/ZF4_L/x",
+   "ic_set": "ZF4_L",
+   "jobname": "zf4Lx",
+   "set": {
+    "DynamicalSeedBlackHoleMass": "8.1288e-4",
+    "MinFoFMassForNewSeed": "5.0"
+   },
+   "DynamicalSeedBlackHoleMass": "8.1288e-4",
+   "MinFoFMassForNewSeed": "5.0",
+   "dyn_seed_Msun": 12000000.0,
+   "threshold_Msun_h": 50000000000.0,
+   "required": false,
+   "note": "optional crossed case (plan S6)"
+  },
+  {
+   "label": "TDE_ZF4_H_X",
+   "dir": "runs/ZF4_H/x",
+   "ic_set": "ZF4_H",
+   "jobname": "zf4Hx",
+   "set": {
+    "InitCondFile": "$HOME/scratch1/MultiZoomICs/ics_targethalos_LtU_L500_M13.00-13.25_H5_Zf4_000",
+    "DynamicalSeedBlackHoleMass": "8.1288e-4",
+    "MinFoFMassForNewSeed": "5.0"
+   },
+   "DynamicalSeedBlackHoleMass": "8.1288e-4",
+   "MinFoFMassForNewSeed": "5.0",
+   "dyn_seed_Msun": 12000000.0,
+   "threshold_Msun_h": 50000000000.0,
+   "required": false,
+   "note": "optional crossed case (plan S6)"
+  }
+ ]
+}

@@ -1,0 +1,355 @@
+
+
+%----  Relevant files
+InitCondFile                   /u/nianyic/scratch1/MultiZoomICs/ics_targethalos_LtU_L500_M12.75-13.00_H5_Zf4_000
+
+OutputDir                 ./output
+
+SnapshotFileBase          snapshot
+
+OutputListFilename        outputs.txt
+
+%---- File formats
+
+ICFormat           3
+
+SnapFormat         3
+
+%---- CPU-time limits
+
+TimeLimitCPU              81000   % 22.5h in seconds (walltime 23h)
+
+CpuTimeBetRestartFile     14400    % 4h in seconds
+
+ResubmitOn        0
+
+ResubmitCommand   my-scriptfile
+
+%----- Memory allocation
+
+MaxMemSize    4000    % MB per MPI task (512GB / 112 tasks * ~0.9)
+
+%---- Characteristics of run
+
+TimeBegin             0.015625  % Begin of the simulation (z=63, from the ZF4 zoom IC)
+
+TimeMax	              1.0  % End of the simulation (z=0)
+
+%---- Cosmological parameters (from Planck paper XVI, table 2, Planck + lensing column)
+
+Omega0	              0.3089
+
+OmegaLambda           0.6911
+
+OmegaBaryon           0.0486
+
+HubbleParam           0.6774
+
+BoxSize               500.0
+
+%---- Basic code options that set the type of simulation
+
+ComovingIntegrationOn    1
+
+PeriodicBoundariesOn     1
+
+CoolingOn		 1
+
+StarformationOn		 1
+
+%---- Output frequency and output parameters
+
+OutputListOn              1
+
+TimeBetSnapshot           1.06
+
+TimeOfFirstSnapshot       0.06
+
+TimeBetStatistics         0.01
+
+NumFilesPerSnapshot       8
+
+MaxFilesWithConcurrentIO  8
+
+%----  Initial B-field
+
+MHDSeedDir          1
+
+MHDSeedValue        1e-14
+
+%---- Accuracy of time integration
+
+TypeOfTimestepCriterion  0
+
+ErrTolIntAccuracy        0.012
+
+CourantFac               0.3
+
+MaxSizeTimestep          0.005
+
+MinSizeTimestep          0.0
+
+%---- Parameters for star formation model
+
+CritPhysDensity      0       % critical physical density for star formation (in cm^(-3))
+
+MaxSfrTimescale      0.00227    % in internal time units (1.5)
+
+CritOverDensity      57.7    % overdensity threshold value
+
+TempSupernova        5.73e7  % in Kelvin (1.0e8)
+
+TempClouds           1000.0  % in Kelvin
+
+FactorEVP            573.0   % (1000.0)
+
+TemperatureThresh    0
+
+%---- Treatment of empty space and temperature limits
+
+InitGasTemp                           244.8095
+
+MinGasTemp                            5.0
+
+MinimumDensityOnStartUp               1.0e-20
+
+LimitUBelowThisDensity                0.0
+
+LimitUBelowCertainDensityToThisValue  0.0
+
+MinEgySpec                            0.0
+
+%---- Tree algorithm, force accuracy, domain update frequency
+
+TypeOfOpeningCriterion                1
+
+ErrTolTheta                           0.7
+
+ErrTolForceAcc                        0.0025
+
+MultipleDomains                       8
+
+TopNodeFactor                         2.5
+
+ActivePartFracForNewDomainDecomp      0.01
+
+%---- Initial density estimate
+
+DesNumNgb              64
+
+MaxNumNgbDeviation     4
+
+%---- System of units
+
+UnitLength_in_cm         3.085678e24        ;  1.0 Mpc
+
+UnitMass_in_g            1.989e43           ;  1.0e10 solar masses
+
+UnitVelocity_in_cm_per_s 1e5                ;  1 km/sec
+
+GravityConstantInternal  0
+
+%---- Gravitational softening lengths
+%  PROPOSED ZF4 ladder (no earlier ZF4 run to copy from; doc/setup_notes.md S4): classes 0/1 = TNG50-2 values
+%  (m_DM,hr = 2.08e-4 ~ TNG50-2's 2.4e-4), class 2 = BH, classes 3/4/5 for the 64x type-2 and coarse type-3 particles (unchanged).
+MinimumComovingHydroSoftening  0.0001
+
+AdaptiveHydroSofteningSpacing   1.2
+
+GasSoftFactor                   2.5
+SofteningComovingType0         0.00078
+SofteningComovingType1         0.00078
+SofteningComovingType2         0.00078
+
+SofteningComovingType3 0.0031
+
+SofteningComovingType4 0.0125
+
+SofteningComovingType5 0.05
+SofteningMaxPhysType0          0.00039
+SofteningMaxPhysType1          0.00039
+SofteningMaxPhysType2          0.00078
+
+SofteningMaxPhysType3  0.0031
+
+SofteningMaxPhysType4  0.0125
+
+SofteningMaxPhysType5  0.05
+
+SofteningTypeOfPartType0 0
+
+SofteningTypeOfPartType1 1
+
+SofteningTypeOfPartType2 3
+
+SofteningTypeOfPartType3 4
+
+SofteningTypeOfPartType4 1
+
+SofteningTypeOfPartType5 2
+
+%----- Mesh regularization options
+
+CellShapingSpeed       0.5
+
+CellMaxAngleFactor     2.25
+
+ReferenceGasPartMass   0
+
+TargetGasMassFactor    1
+
+RefinementCriterion    1
+
+DerefinementCriterion  1
+
+TreecoolFile           /u/nianyic/scratch1/TNG_tables/TREECOOL_fg_dec11
+
+%----- Subfind
+
+ErrTolThetaSubfind     0.7
+
+DesLinkNgb             20
+
+%----- Wind
+
+WindEnergyIn1e51erg          3.6
+
+VariableWindVelFactor        7.4
+
+ThermalWindFraction          0.1
+
+VariableWindSpecMomentum     0.0
+
+WindFreeTravelMaxTimeFactor  0.025
+
+WindFreeTravelDensFac        0.05
+
+TimeBetOnTheFlyFoF           1.03
+
+MinWindVel                   350.0
+
+%----- Reduction of wind energy for enriched gas
+
+WindEnergyReductionFactor       0.25
+
+WindEnergyReductionMetallicity  0.002
+
+WindEnergyReductionExponent     2
+
+%----- Softer EOS
+
+FactorForSofterEQS   0.3
+
+TempForSofterEQS     1e4
+
+%----- Wind stripping
+
+WindDumpFactor       0.6
+
+%-----  Black holes --------
+%  Seeding/dynamics values = plan fiducial (FID) under the PROVISIONAL "physical Msun" reading of the seed masses
+%  (doc/setup_notes.md S2; open decision in PROGRESS.md). Code units 1e10 Msun/h: 5e5 Msun -> 3.387e-5,
+%  6e6 Msun -> 4.0644e-4 (= 1.96 m_DM,hr; 3 m_DM would be 9.2e6 Msun). MinFoFMassForNewSeed is in 1e10 Msun/h
+%  (FoF DM mass >= Omega_dm/Omega_m x value): 1.0 = 1e10 Msun/h (FID), 5.0 = 5e10 Msun/h (SEED50 = TNG stock).
+
+BlackHoleAccretionFactor         1.0
+
+BlackHoleFeedbackFactor          0.1
+
+BlackHoleEddingtonFactor         1.0
+
+SeedBlackHoleMass                3.387e-5
+
+MinFoFMassForNewSeed             1.0
+
+DesNumNgbBlackHole               156
+
+BlackHoleMaxAccretionRadius      1.e20
+
+BlackHoleRadiativeEfficiency     0.2
+
+%BlackHoleCenteringMassMultiplier       1000     % only with BH_NEW_CENTERING (off here)
+
+%-----  BH dynamics (BH_DF_DISCRETE family) --------
+DynamicalSeedBlackHoleMass       4.0644e-4   % HIGHER_DYNAMICAL_SEED_MASS: particle mass at seeding (max of this and BH_Mass)
+MinDistanceForMergingBlackHoles  2           % MERGE_BHS_WITHIN_GAS_SOFTENING: merge within 2 x SofteningComovingType0 (class 0, comoving)
+%LogMassRatioFullDFD             1.0         % only with REDUCE_DFD_WITH_BH_GROWTH (off)
+%LogMassRatioNoDFD               2.0         % only with REDUCE_DFD_WITH_BH_GROWTH (off)
+
+%-----  Black hole spin evolution (BH_SPIN_EVOLUTION / BH_SPIN_MODEL=3, tracking only) --------
+ShakuraSunyaevParameter   0.1
+BHInitialSpin             0.0
+BHSpinEddRatioThreshold   1e-5
+
+%-----  Black hole adios wind model (fiducial TNG) ---------
+QuasarThreshold                        0.002
+RadioFeedbackMinDensityFactor          0.01
+RadioFeedbackFactor                    1
+RadioFeedbackReiorientationFactor      20.0
+BlackHoleFeedbackDebugOutput        1
+
+%----- Enrichment
+
+IMF_MinMass_Msun           0.1
+
+IMF_MaxMass_Msun           100.0
+
+AGB_MassTransferOn         1
+
+SNIa_MassTransferOn        1
+
+SNII_MassTransferOn        1
+
+SNII_MinMass_Msun          8.0
+
+SNII_MaxMass_Msun          100.0
+
+SNIa_Rate_TAU              0.04
+
+SNIa_Rate_Norm             1.3e-3
+
+YieldTablePath             /u/nianyic/scratch1/TNG_tables/L75TNG_Arepo_GFM_Tables/Yields
+
+DesNumNgbEnrichment        64
+
+MaxNumNgbDeviationEnrichment 4
+
+%----- Initial gas metallicity
+
+PreEnrichTime              0.0078125
+
+PreEnrichAbundanceFile     /u/nianyic/scratch1/TNG_tables/L75TNG_initial_abundances.txt
+
+% ----- NSNS Enrichment
+
+NSNS_MassTransferOn       1
+
+NSNS_MassPerEvent         5000      % Msun (code converts with SOLAR_MASS/UnitMass_in_g)
+
+NSNS_Rate_TAU             0.1
+
+NSNS_per_SNIa             1e-3
+
+%-----  Metal cooling
+
+CoolingTablePath            /u/nianyic/scratch1/TNG_tables/L75TNG_Arepo_GFM_Tables/Cooling/cooling_metal_AGN_Compton_self_shielding_Rahmati12.hdf5
+
+MinMetalTemp                1e4
+
+%----- Self-Shielding
+
+SelfShieldingFile           /u/nianyic/scratch1/TNG_tables/SelfShielding_Rahmati12
+
+%-----  Photometrics
+
+PhotometricsTablePath       /u/nianyic/scratch1/TNG_tables/L75TNG_Arepo_GFM_Tables/Photometrics/
+
+%----- AGN radiation
+
+TreecoolFileAGN             /u/nianyic/scratch1/TNG_tables/TREECOOL_AGN
+
+SelfShieldingDensity        0.1295
+
+ObscurationFactor           0.3
+
+ObscurationSlope            0.07

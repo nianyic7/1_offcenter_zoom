@@ -1,0 +1,18 @@
+# build products and binaries
+**/build/
+**/Arepo
+**/Arepo.prev*
+**/compile.log
+# slurm / run logs
+slurm-*.out
+log-*
+# verbose test logs
+test_logs/
+# editor / notebook junk
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.claude/
+.superpowers/
+# plots (exploratory plots live in scratch_plots/; paper figures are committed deliberately)
+scratch_plots/*.png
