@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -p p.exclusive
-#SBATCH -N 4
+#SBATCH -N 8
 #SBATCH --ntasks-per-node=112
 #SBATCH --job-name=zf4tmpl-r
 #SBATCH --time=23:00:00
@@ -17,7 +17,7 @@ cp param.txt $outdir
 cp outputs.txt $outdir
 cd $outdir
 
-mpiexec -np 448 ./Arepo  param.txt 1 > log-$SLURM_JOB_ID
+mpiexec -np 896 ./Arepo  param.txt 1 > log-$SLURM_JOB_ID
 sleep 1
 if [ ! -f output/end ]; then
     cd $cwd

@@ -29,17 +29,15 @@ Earlier use of the same flag set: `~/bhspin/M11.00_H5_Zf2/{dfonly,dfspin01,dfspi
   type-1 mass table entry, and `LenType[1]` counts type-1 particles, so coarse (type 2/3) particles never trigger seeding. Good for zooms.
 - High-res DM mass in both ZF4 ICs: `0.00020764` code = **2.076e6 Msun/h = 3.065e6 Msun**. (TNG50-2 is 2.4e-4; TNG50-3 and the
   0_feedback box 2.33e-3; H16_Zf2 1.66e-3.) A 1e10 Msun/h FoF group holds ~4060 high-res DM particles, a 5e10 one ~20300: both well resolved.
-- **OPEN — dynamical seed mass vs "3 m_DM":**
+- **DECIDED 2026-10-05 (user): the plan's seed masses are Msun/h** -> `SeedBlackHoleMass 5e-5`, `DynamicalSeedBlackHoleMass 6e-4` (FID, 2.89 m_DM) / `1.2e-3` (DYN12, 5.8 m_DM). The table that led to the question:
 
   | Reading of "6e6" | code value | / m_DM,hr |
   |---|---|---|
-  | 6e6 physical Msun (plan's provisional reading, in the template) | 4.0644e-4 | 1.96 |
-  | 6e6 Msun/h | 6e-4 | 2.89 |
+  | 6e6 physical Msun (plan's provisional reading) | 4.0644e-4 | 1.96 |
+  | 6e6 Msun/h (**chosen**, in the template) | 6e-4 | 2.89 |
   | 3 m_DM exactly = 9.2e6 Msun = 6.23e6 Msun/h | 6.229e-4 | 3.00 |
 
-  The "≈3 m_DM" statement only holds for the Msun/h reading. The plan says: flag and settle one value, do not silently change.
-  DYN12 (1.2e7 Msun = 8.1288e-4 code = 3.9 m_DM) and the 5e5 Msun physical seed (3.387e-5 code; 5e-5 if Msun/h) have the same ambiguity.
-  Template holds the physical-Msun reading; `doc/run_manifest.json` has to be regenerated if the user picks another.
+  The "≈3 m_DM" statement holds for the Msun/h reading, which is also what `~/bhspin/M11.00_H5_Zf2/dfonly` used (5e-5 / 1e-3).
 
 ## S3. ICs (do not generate — the user copies them; see memory)
 
@@ -53,27 +51,29 @@ Parent mass bins are therefore FoF mass, not M200c (plan asked for the conventio
 groups carry everything else. Particle counts: see `run_manifest.json`. Gas is generated at start-up (`GENERATE_GAS_IN_ICS`, `SPLIT_PARTICLE_TYPE=2+4+8`
 splits types 1,2,3), so total ~ 2 x N_hr + N_type2 + N_type3 ≈ 92M (L) / 126M (H) vs 362M for H16_Zf2.
 
-## S4. Softenings (**OPEN** — proposed, no earlier ZF4 run to copy)
+## S4. Softenings (DECIDED 2026-10-05; max-phys value ASSUMED)
 
-ZF4 high-res mass ≈ TNG50-2, so the template uses TNG50-2 softenings: classes 0/1 (gas, high-res DM, stars) 0.00078 comoving /
-0.00039 max-phys Mpc/h (TNG50-3: 0.00156/0.00078), class 2 (BH) 0.00078/0.00078, `MinimumComovingHydroSoftening 0.0001` (keeps the TNG
-ratio 0.128 x DM softening). Classes 3/4/5 (0.0031 / 0.0125 / 0.05, no cap) unchanged: with `INDIVIDUAL_GRAVITY_SOFTENING=4+8+32` the code
-picks per type-2/3 particle the class nearest to eps_1 (m/m_1)^(1/3); type 2 is 64 x m_hr -> 4 x 0.00078 = 0.0031 = class 3.
-Consequence for the merger radius: 2 x class 0 = 1.56 kpc/h comoving. Timestep settings unchanged from the H16_Zf2 template.
+User: "0.4 kpc/h comoving". Template: classes 0/1 (gas, high-res DM, stars) `SofteningComovingType0/1 0.0004`, `SofteningMaxPhysType0/1 0.0002`
+(the TNG convention max-phys = comoving/2 was **assumed**, not stated by the user; TNG50-1 uses 0.00039/0.000195 for a 7x smaller m_DM —
+confirm or set 0.0004/0.0004), class 2 (BH) 0.0004/0.0004, `MinimumComovingHydroSoftening 0.00005` (TNG ratio 0.128 x DM softening).
+Classes 3/4/5 (0.0031 / 0.0125 / 0.05, no cap) unchanged: with `INDIVIDUAL_GRAVITY_SOFTENING=4+8+32` (types 2, 3, 5 mass-scaled) the code picks
+per particle the class nearest in log to eps_1 (m/m_1)^(1/3); type 2 is 64 x m_hr -> 4 x 0.0004 = 0.0016 -> class 3 (0.0031, nearest). BHs (type 5)
+are also mass-scaled: a 6e-4 dynamical mass gives (m/m_1)^(1/3) = 1.43 -> 0.00057 -> class 0/1/2 (0.0004). Merger radius = 2 x class 0 =
+0.8 kpc/h comoving. Timestep settings unchanged from the H16_Zf2 template.
 
-## S5. Outputs (**OPEN**)
+## S5. Outputs (DECIDED 2026-10-05: 100 Myr)
 
-Template `outputs.txt` = the 0_feedback list (z = 6, 4, 3, 2, 1.5, 1, 0.7, 0.5, 0.3, 0.1, 0; 11 snapshots, 8 files each). The plan's
-"every 50 Myr at z<=3" adds ~233 snapshots; at ~100M particles a full snapshot is ~10–15 GB -> 2–3.5 TB per run, 6 runs 15–20 TB. Options to
-decide: (a) full snapshots at 50 Myr, (b) `SUBBOX`/mini-snapshot support in this arepo (not checked), (c) coarser cadence (100–200 Myr) plus the
-per-BH-timestep details file (already sub-Myr) for BH orbits. Galaxy centres over time need snapshots or SubFind catalogs: `FOF`+`SUBFIND` run at
+Template `outputs.txt`: z = 6, 4, then every 100 Myr from z = 3 (t = 2.15 Gyr) to z = 0 (13.80 Gyr): 120 snapshots, 8 files each
+(user: 50 Myr "a bit too much", 100 Myr for now). At ~100M particles a full snapshot is ~10–15 GB -> 1.2–1.8 TB per run, 6 runs ~7–11 TB on
+`/ocean` (12 TiB free on 2026-10-02): check the quota before the chains run far. Generated with Planck15 (Om 0.3089, h 0.6774) in
+`PROGRESS.md` 2026-10-05; the per-BH-timestep details file remains the sub-Myr source for BH orbits. Still open: `OUTPUT_HOST_PROPERTIES_FOR_BH_MERGERS`. Galaxy centres over time need snapshots or SubFind catalogs: `FOF`+`SUBFIND` run at
 every snapshot (`TimeBetOnTheFlyFoF 1.03` also runs FoF on the fly for seeding only). BH mergers are logged in `blackhole_mergers/` by default.
 
-## S6. Cluster / resources (**OPEN** node count)
+## S6. Cluster / resources (DECIDED 2026-10-05: 8 nodes L, 12 nodes H)
 
 Bridges-2 (the target): settings verified in 0_feedback on 2026-09-29 and copied into `scripts/clusters.py` (RM, account phy240015p,
 64 tasks/node, MaxMemSize 3600, 48 h, TimeLimitCPU 190000, `~/arepo/modules_br2.sh`). H16_Zf2 (362M particles) runs there on 16 nodes with
-peak 2.9 GB/task. Scaling by particle count, ZF4_L (~92M) and ZF4_H (~126M) fit 4 and 6 nodes by memory; the template says `-N 4` (448 tasks on
-Orion / 256 on Bridges after `make_run.py`). Measure memory and pace in the first job before fixing the node count (plan S3.8). Bridges caveats
+peak 2.9 GB/task. User choice: ZF4_L on 8 nodes, ZF4_H on 12 nodes (Bridges: 512 / 768 tasks; template `-N 8`, use `--nodes 12` for H).
+Memory is then ~1 GB/task; the first job measures pace (plan S3.8). All three variants of a bin stay on that layout. Bridges caveats
 (0_feedback PROGRESS 2026-10-02): home quota 24.84/25 GiB nearly full, `/ocean` project 12 TiB free; restart sets for H16_Zf2 were 430 GB each.
 Bridges cannot see `/virgotng`: the two IC files must be transferred (user).

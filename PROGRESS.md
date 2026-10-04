@@ -1,5 +1,25 @@
 # PROGRESS
 
+## 2026-10-05 (Orion) — decisions applied
+### Done
+- User pushed `main` to https://github.com/nianyic7/1_offcenter_zoom (the agent's push was blocked by the permission classifier; ask the user to push).
+- Decisions from the user applied to template, manifest, run_status, setup_notes, CLAUDE.md, workflow (`doc/setup_notes.md` S2/S4/S5/S6):
+  1. Seed masses are Msun/h: `SeedBlackHoleMass 5e-5`, `DynamicalSeedBlackHoleMass 6e-4` (FID) / `1.2e-3` (DYN12). Thresholds unchanged (1.0 / 5.0).
+  2. Softening 0.4 kpc/h comoving for gas/high-res DM/stars/BH (`0.0004`); max-phys `0.0002` for classes 0/1 **assumed** (TNG factor 2).
+  3. Outputs every 100 Myr from z=3 (+ z=6, 4): 120 snapshots (`runs/templates/zf4_tde/outputs.txt`, Planck15 t(a)); ~1.2–1.8 TB per run.
+  4. Nodes: ZF4_L 8, ZF4_H 12 (template `-N 8`; `--nodes 12` for H).
+- Tests updated and passing.
+### Still open (small; confirm with the user when configuring)
+- Max-phys softening for classes 0/1: 0.0002 (assumed) or 0.0004 (no extra physical cap).
+- Whether to add `OUTPUT_HOST_PROPERTIES_FOR_BH_MERGERS` (host masses in the merger log; untested here).
+- Start order: both FID runs first as validation segments, or all six at once.
+### Next (Bridges-2 agent)
+- `git clone git@github.com:nianyic7/1_offcenter_zoom.git ~/1_offcenter_zoom`; read `CLAUDE.md`, `doc/agent_rules.md`, `doc/workflow.md`, this file.
+- Pre-conditions (workflow §2.0): both ZF4 ICs in `~/scratch1/MultiZoomICs/` (user transfers; Bridges cannot see `/virgotng`), `~/scratch1/TNG_tables`,
+  `~/arepo` >= a71e393f83, `python3 scripts/test_clusters.py`, `lfs quota -p 554803 /ocean` (120 snapshots x 6 runs ~ 7–11 TB + restart sets).
+- Make the six run dirs with `make_run.py --cluster bridges --nodes 8|12` and the manifest `--set` values, diff each against its `fid`, compile,
+  pre-flight, submit, verify start-up (READIC 36837120 / 54058240, masstab 0.00020764, 18-column details), record in `doc/run_status.md`.
+
 ## 2026-10-03 (Orion) — repo initialised
 ### Done
 - Repo created from the 0_feedback pattern: `CLAUDE.md`, `doc/{agent_rules,workflow,setup_notes,run_status}.md`, `doc/run_manifest.json`,
@@ -14,7 +34,7 @@
 ### Failed / not done
 - GitHub remote not created: no `gh` CLI or token on Orion (SSH to GitHub works). Remote `origin` is set to
   `git@github.com:nianyic7/1_offcenter_zoom.git`; the user creates the private repo and pushes `main` (or asks the agent to push).
-### Open decisions (ask the user before configuring the Bridges runs; `doc/setup_notes.md` has the details)
+### Open decisions at the time (settled 2026-10-05, see above)
 1. **Seed-mass units**: 5e5 / 6e6 / 1.2e7 as physical Msun (template: 3.387e-5 / 4.0644e-4 / 8.1288e-4; 6e6 = 1.96 m_DM) or Msun/h
    (5e-5 / 6e-4 / 1.2e-3; 6e6 = 2.89 m_DM), or set the fiducial to exactly 3 m_DM (6.229e-4). Recommended: Msun/h reading (matches the plan's
    "~3 m_DM" and bhspin usage) — but it is the user's call. Regenerate `run_manifest.json`, template and `run_status.md` values accordingly.

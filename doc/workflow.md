@@ -25,14 +25,14 @@ into the scratch mirror and runs there, so the mirror is self-describing.
 
 0. **Pre-conditions** (first time on a cluster): `git pull --rebase`; `~/scratch1` exists (Bridges: symlink to the project `/ocean` dir);
    both IC files present; `~/scratch1/TNG_tables` present; `~/arepo` on the right commit; `python3 scripts/test_clusters.py` passes;
-   the open decisions in `PROGRESS.md` are settled with the user (units of the seed masses, softening ladder, output cadence, node count).
+   the remaining open items in `PROGRESS.md` are settled with the user (max-phys softening, merger-host log flag).
 1. **Make the dir** from the manifest, e.g. for L/DYN12 on Bridges:
    ```
    python3 scripts/make_run.py --template runs/templates/zf4_tde --dest runs/ZF4_L/dyn12 --jobname zf4Ldyn \
-       --outdir '$HOME/scratch1/1_offcenter_zoom/runs/ZF4_L/dyn12' --cluster bridges --nodes 4 \
-       --set DynamicalSeedBlackHoleMass=8.1288e-4 --comment 'ZF4_L DYN12: dynamical seed 1.2e7 Msun, threshold 1e10 Msun/h'
+       --outdir '$HOME/scratch1/1_offcenter_zoom/runs/ZF4_L/dyn12' --cluster bridges --nodes 8 \
+       --set DynamicalSeedBlackHoleMass=1.2e-3 --comment 'ZF4_L DYN12: dynamical seed 1.2e7 Msun/h, threshold 1e10 Msun/h'
    ```
-   For `ZF4_H/*` add `--set InitCondFile=$HOME/scratch1/MultiZoomICs/ics_targethalos_LtU_L500_M13.00-13.25_H5_Zf4_000`.
+   For `ZF4_H/*` use `--nodes 12` and add `--set InitCondFile=$HOME/scratch1/MultiZoomICs/ics_targethalos_LtU_L500_M13.00-13.25_H5_Zf4_000`.
    `make_run.py` rewrites partition/account/tasks-per-node/walltime/module script/MaxMemSize/TimeLimitCPU/home paths for the cluster.
 2. **Diff against fid**: `diff runs/ZF4_L/fid/param.txt runs/ZF4_L/dyn12/param.txt` and the same for `Config.sh` (must be identical) and `run.sh`
    (job name and outdir only).

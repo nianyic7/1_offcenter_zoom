@@ -150,25 +150,25 @@ UnitVelocity_in_cm_per_s 1e5                ;  1 km/sec
 GravityConstantInternal  0
 
 %---- Gravitational softening lengths
-%  PROPOSED ZF4 ladder (no earlier ZF4 run to copy from; doc/setup_notes.md S4): classes 0/1 = TNG50-2 values
-%  (m_DM,hr = 2.08e-4 ~ TNG50-2's 2.4e-4), class 2 = BH, classes 3/4/5 for the 64x type-2 and coarse type-3 particles (unchanged).
-MinimumComovingHydroSoftening  0.0001
+%  ZF4 ladder (user decision 2026-10-05): classes 0/1 (gas, high-res DM, stars) 0.4 kpc/h comoving, max-phys 0.2 kpc/h (TNG factor 2,
+%  ASSUMED - see doc/setup_notes.md S4); class 2 = BH 0.4 kpc/h; classes 3/4/5 for the 64x type-2 and coarse type-3 particles unchanged.
+MinimumComovingHydroSoftening    0.00005
 
 AdaptiveHydroSofteningSpacing   1.2
 
 GasSoftFactor                   2.5
-SofteningComovingType0         0.00078
-SofteningComovingType1         0.00078
-SofteningComovingType2         0.00078
+SofteningComovingType0           0.0004
+SofteningComovingType1           0.0004
+SofteningComovingType2           0.0004
 
 SofteningComovingType3 0.0031
 
 SofteningComovingType4 0.0125
 
 SofteningComovingType5 0.05
-SofteningMaxPhysType0          0.00039
-SofteningMaxPhysType1          0.00039
-SofteningMaxPhysType2          0.00078
+SofteningMaxPhysType0            0.0002
+SofteningMaxPhysType1            0.0002
+SofteningMaxPhysType2            0.0004
 
 SofteningMaxPhysType3  0.0031
 
@@ -247,10 +247,10 @@ TempForSofterEQS     1e4
 WindDumpFactor       0.6
 
 %-----  Black holes --------
-%  Seeding/dynamics values = plan fiducial (FID) under the PROVISIONAL "physical Msun" reading of the seed masses
-%  (doc/setup_notes.md S2; open decision in PROGRESS.md). Code units 1e10 Msun/h: 5e5 Msun -> 3.387e-5,
-%  6e6 Msun -> 4.0644e-4 (= 1.96 m_DM,hr; 3 m_DM would be 9.2e6 Msun). MinFoFMassForNewSeed is in 1e10 Msun/h
-%  (FoF DM mass >= Omega_dm/Omega_m x value): 1.0 = 1e10 Msun/h (FID), 5.0 = 5e10 Msun/h (SEED50 = TNG stock).
+%  Seeding/dynamics values = plan fiducial (FID). All masses in code units 1e10 Msun/h (user decision 2026-10-05: the plan's
+%  seed masses are Msun/h): physical seed 5e5 Msun/h -> 5e-5; dynamical seed 6e6 Msun/h -> 6e-4 (= 2.9 m_DM,hr = 2.08e-4),
+%  DYN12 1.2e7 Msun/h -> 1.2e-3. MinFoFMassForNewSeed (FoF DM mass >= Omega_dm/Omega_m x value): 1.0 = 1e10 Msun/h (FID),
+%  5.0 = 5e10 Msun/h (SEED50 = TNG stock).
 
 BlackHoleAccretionFactor         1.0
 
@@ -258,7 +258,7 @@ BlackHoleFeedbackFactor          0.1
 
 BlackHoleEddingtonFactor         1.0
 
-SeedBlackHoleMass                3.387e-5
+SeedBlackHoleMass                5.0e-5
 
 MinFoFMassForNewSeed             1.0
 
@@ -271,8 +271,8 @@ BlackHoleRadiativeEfficiency     0.2
 %BlackHoleCenteringMassMultiplier       1000     % only with BH_NEW_CENTERING (off here)
 
 %-----  BH dynamics (BH_DF_DISCRETE family) --------
-DynamicalSeedBlackHoleMass       4.0644e-4   % HIGHER_DYNAMICAL_SEED_MASS: particle mass at seeding (max of this and BH_Mass)
-MinDistanceForMergingBlackHoles  2           % MERGE_BHS_WITHIN_GAS_SOFTENING: merge within 2 x SofteningComovingType0 (class 0, comoving)
+DynamicalSeedBlackHoleMass       6.0e-4      % HIGHER_DYNAMICAL_SEED_MASS: particle mass at seeding (max of this and BH_Mass)
+MinDistanceForMergingBlackHoles  2           % MERGE_BHS_WITHIN_GAS_SOFTENING: merge within 2 x SofteningComovingType0 = 0.8 kpc/h comoving
 %LogMassRatioFullDFD             1.0         % only with REDUCE_DFD_WITH_BH_GROWTH (off)
 %LogMassRatioNoDFD               2.0         % only with REDUCE_DFD_WITH_BH_GROWTH (off)
 

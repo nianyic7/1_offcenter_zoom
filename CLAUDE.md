@@ -29,14 +29,15 @@ ICs (the user copies them from `/virgotng/mpa/LtU/ICs/FlagshipZoomICs/`); ask be
 - Git remote: `origin` = git@github.com:nianyic7/1_offcenter_zoom.git (private, `main`). Pull (`git pull --rebase`) at session start.
 
 ## Conventions
-- Units: Mpc/h, 1e10 Msun/h, km/s (as 0_feedback and the zoom ICs). Param masses are code units: `SeedBlackHoleMass 3.387e-5` (5e5 Msun),
-  `DynamicalSeedBlackHoleMass 4.0644e-4` (6e6 Msun) / `8.1288e-4` (1.2e7), `MinFoFMassForNewSeed 1.0` (1e10 Msun/h) / `5.0` (5e10 = TNG stock).
-  The "physical Msun" reading of the seed masses is provisional (`doc/setup_notes.md` S2) — settle before launch.
+- Units: Mpc/h, 1e10 Msun/h, km/s (as 0_feedback and the zoom ICs). Param masses are code units and the plan's seed masses are Msun/h (user,
+  2026-10-05): `SeedBlackHoleMass 5e-5` (5e5 Msun/h), `DynamicalSeedBlackHoleMass 6e-4` (6e6 Msun/h = 2.9 m_DM) / `1.2e-3` (1.2e7),
+  `MinFoFMassForNewSeed 1.0` (1e10 Msun/h) / `5.0` (5e10 = TNG stock).
 - Physics = fiducial TNG (0_feedback zoom template) + `BH_DF_DISCRETE`, `HIGHER_DYNAMICAL_SEED_MASS`, `MERGE_BHS_WITHIN_GAS_SOFTENING`,
   `RELATIVE_VELOCITY_CRITERION_FOR_MERGERS`, `OUTPUT_BLACKHOLE_KINEMATICS`; `BH_NEW_CENTERING` off; `REDUCE_DFD_WITH_BH_GROWTH` off; spin tracking only.
   No `BH_TLA_*`. All flags exist in `~/arepo`; no code change.
-- ZF4 ICs: m_DM,hr = 2.08e-4 (~TNG50-2), z_start 63, 500 Mpc/h parent (MTNG-L500-4320-A), bins are parent **FoF GroupMass**. Softening ladder = TNG50-2
-  values (0.00078/0.00039 Mpc/h) for classes 0–2, coarse classes unchanged (proposed, S4). Merge radius = 2 x class-0 softening.
+- ZF4 ICs: m_DM,hr = 2.08e-4 (~TNG50-2), z_start 63, 500 Mpc/h parent (MTNG-L500-4320-A), bins are parent **FoF GroupMass**. Softening (user, 2026-10-05): 0.4 kpc/h comoving
+  for classes 0–2 (`0.0004`), max-phys `0.0002` for 0/1 (assumed TNG factor 2, S4), coarse classes unchanged. Merge radius = 2 x class 0 = 0.8 kpc/h comoving.
+- Outputs: z=6, 4, then every 100 Myr from z=3 (120 snapshots, 8 files each; user 2026-10-05). Nodes: ZF4_L 8, ZF4_H 12 (`make_run.py --nodes`).
 - `blackhole_details_*.txt` = 18 columns (ID, t, M_BH, mdot, rho, cs, pos[3], vel[3], acc[3], DF acc[3]); mergers in `blackhole_mergers/`.
 
 ## Workflow (read `doc/workflow.md` before touching any run)

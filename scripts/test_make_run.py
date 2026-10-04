@@ -20,7 +20,7 @@ def main():
            "--template", TEMPLATE, "--dest", dest, "--jobname", "t9foo",
            "--outdir", "$HOME/scratch1/1_offcenter_zoom/runs/ZF9_T/foo",
            "--add-flag", "REDUCE_DFD_WITH_BH_GROWTH", "--add-flag", "OUTPUT_HOST_PROPERTIES_FOR_BH_MERGERS",
-           "--set", "DynamicalSeedBlackHoleMass=8.1288e-4", "--set", "MinFoFMassForNewSeed=5.0",
+           "--set", "DynamicalSeedBlackHoleMass=1.2e-3", "--set", "MinFoFMassForNewSeed=5.0",
            "--set", "LogMassRatioFullDFD=1.0", "--set", "NewTag=7",
            "--comment", "T9 test run"]
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -48,9 +48,10 @@ def main():
     def val(key):
         m = re.search(r"^%s\s+(\S+)" % re.escape(key), prm, re.M)
         return m.group(1) if m else None
-    exp = {"DynamicalSeedBlackHoleMass": "8.1288e-4", "MinFoFMassForNewSeed": "5.0",
+    exp = {"DynamicalSeedBlackHoleMass": "1.2e-3", "MinFoFMassForNewSeed": "5.0",
            "LogMassRatioFullDFD": "1.0", "NewTag": "7", "MinDistanceForMergingBlackHoles": "2",
-           "DesNumNgbBlackHole": "156", "BoxSize": "500.0", "TimeBegin": "0.015625"}
+           "DesNumNgbBlackHole": "156", "BoxSize": "500.0", "TimeBegin": "0.015625", "SeedBlackHoleMass": "5.0e-5",
+           "SofteningComovingType1": "0.0004", "SofteningMaxPhysType1": "0.0002"}
     for k, v in exp.items():
         if val(k) != v:
             fails.append("param %s = %r, expected %r" % (k, val(k), v))
@@ -67,7 +68,7 @@ def main():
         fails.append("job names not set")
     import clusters
     tpn = clusters.get()["tasks_per_node"]
-    if "-N 4" not in runsh or "-np %d" % (4 * tpn) not in runsh:
+    if "-N 8" not in runsh or "-np %d" % (8 * tpn) not in runsh:
         fails.append("node layout changed")
     for junk in ("Arepo", "build", "compile.log"):
         if os.path.exists(os.path.join(dest, junk)):

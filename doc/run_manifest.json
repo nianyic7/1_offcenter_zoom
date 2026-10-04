@@ -1,5 +1,5 @@
 {
- "_comment": "Machine-readable six-run manifest for doc/off_nuclear_tde_first_round_runs.md. Masses: seed_* in physical Msun under the PROVISIONAL reading (open decision, PROGRESS.md); code units are 1e10 Msun/h (x h/1e10). MinFoFMassForNewSeed is in 1e10 Msun/h. Every run = runs/templates/zf4_tde + only the listed --set values (+ InitCondFile for ZF4_H). Diff each variant against its fid before launch.",
+ "_comment": "Machine-readable six-run manifest for doc/off_nuclear_tde_first_round_runs.md. All param masses are code units 1e10 Msun/h; the plan's seed masses are Msun/h (user decision 2026-10-05). Every run = runs/templates/zf4_tde + only the listed --set values (+ InitCondFile for ZF4_H). Nodes: ZF4_L 8, ZF4_H 12 (user decision 2026-10-05; Bridges 64 tasks/node). Diff each variant against its fid before launch.",
  "template": "runs/templates/zf4_tde",
  "code": {
   "repo": "~/arepo",
@@ -57,10 +57,13 @@
   }
  },
  "common": {
-  "SeedBlackHoleMass": "3.387e-5",
-  "seed_mass_Msun": 500000.0,
+  "SeedBlackHoleMass": "5.0e-5",
+  "seed_mass_Msun_h": 500000.0,
   "MinDistanceForMergingBlackHoles": "2",
-  "DesNumNgbBlackHole": "156"
+  "DesNumNgbBlackHole": "156",
+  "softening_comoving_hr_Mpc_h": 0.0004,
+  "softening_maxphys_hr_Mpc_h": 0.0002,
+  "outputs": "z=6, 4, then every 100 Myr from z=3 to z=0 (120 snapshots)"
  },
  "runs": [
   {
@@ -69,11 +72,12 @@
    "ic_set": "ZF4_L",
    "jobname": "zf4Lfid",
    "set": {},
-   "DynamicalSeedBlackHoleMass": "4.0644e-4",
+   "DynamicalSeedBlackHoleMass": "6.0e-4",
    "MinFoFMassForNewSeed": "1.0",
-   "dyn_seed_Msun": 6000000.0,
    "threshold_Msun_h": 10000000000.0,
-   "required": true
+   "required": true,
+   "dyn_seed_Msun_h": 6000000.0,
+   "nodes": 8
   },
   {
    "label": "TDE_ZF4_L_DYN12",
@@ -81,13 +85,14 @@
    "ic_set": "ZF4_L",
    "jobname": "zf4Ldyn",
    "set": {
-    "DynamicalSeedBlackHoleMass": "8.1288e-4"
+    "DynamicalSeedBlackHoleMass": "1.2e-3"
    },
-   "DynamicalSeedBlackHoleMass": "8.1288e-4",
+   "DynamicalSeedBlackHoleMass": "1.2e-3",
    "MinFoFMassForNewSeed": "1.0",
-   "dyn_seed_Msun": 12000000.0,
    "threshold_Msun_h": 10000000000.0,
-   "required": true
+   "required": true,
+   "dyn_seed_Msun_h": 12000000.0,
+   "nodes": 8
   },
   {
    "label": "TDE_ZF4_L_SEED50",
@@ -97,11 +102,12 @@
    "set": {
     "MinFoFMassForNewSeed": "5.0"
    },
-   "DynamicalSeedBlackHoleMass": "4.0644e-4",
+   "DynamicalSeedBlackHoleMass": "6.0e-4",
    "MinFoFMassForNewSeed": "5.0",
-   "dyn_seed_Msun": 6000000.0,
    "threshold_Msun_h": 50000000000.0,
-   "required": true
+   "required": true,
+   "dyn_seed_Msun_h": 6000000.0,
+   "nodes": 8
   },
   {
    "label": "TDE_ZF4_H_FID",
@@ -111,11 +117,12 @@
    "set": {
     "InitCondFile": "$HOME/scratch1/MultiZoomICs/ics_targethalos_LtU_L500_M13.00-13.25_H5_Zf4_000"
    },
-   "DynamicalSeedBlackHoleMass": "4.0644e-4",
+   "DynamicalSeedBlackHoleMass": "6.0e-4",
    "MinFoFMassForNewSeed": "1.0",
-   "dyn_seed_Msun": 6000000.0,
    "threshold_Msun_h": 10000000000.0,
-   "required": true
+   "required": true,
+   "dyn_seed_Msun_h": 6000000.0,
+   "nodes": 12
   },
   {
    "label": "TDE_ZF4_H_DYN12",
@@ -124,13 +131,14 @@
    "jobname": "zf4Hdyn",
    "set": {
     "InitCondFile": "$HOME/scratch1/MultiZoomICs/ics_targethalos_LtU_L500_M13.00-13.25_H5_Zf4_000",
-    "DynamicalSeedBlackHoleMass": "8.1288e-4"
+    "DynamicalSeedBlackHoleMass": "1.2e-3"
    },
-   "DynamicalSeedBlackHoleMass": "8.1288e-4",
+   "DynamicalSeedBlackHoleMass": "1.2e-3",
    "MinFoFMassForNewSeed": "1.0",
-   "dyn_seed_Msun": 12000000.0,
    "threshold_Msun_h": 10000000000.0,
-   "required": true
+   "required": true,
+   "dyn_seed_Msun_h": 12000000.0,
+   "nodes": 12
   },
   {
    "label": "TDE_ZF4_H_SEED50",
@@ -141,11 +149,12 @@
     "InitCondFile": "$HOME/scratch1/MultiZoomICs/ics_targethalos_LtU_L500_M13.00-13.25_H5_Zf4_000",
     "MinFoFMassForNewSeed": "5.0"
    },
-   "DynamicalSeedBlackHoleMass": "4.0644e-4",
+   "DynamicalSeedBlackHoleMass": "6.0e-4",
    "MinFoFMassForNewSeed": "5.0",
-   "dyn_seed_Msun": 6000000.0,
    "threshold_Msun_h": 50000000000.0,
-   "required": true
+   "required": true,
+   "dyn_seed_Msun_h": 6000000.0,
+   "nodes": 12
   },
   {
    "label": "TDE_ZF4_L_X",
@@ -153,15 +162,16 @@
    "ic_set": "ZF4_L",
    "jobname": "zf4Lx",
    "set": {
-    "DynamicalSeedBlackHoleMass": "8.1288e-4",
+    "DynamicalSeedBlackHoleMass": "1.2e-3",
     "MinFoFMassForNewSeed": "5.0"
    },
-   "DynamicalSeedBlackHoleMass": "8.1288e-4",
+   "DynamicalSeedBlackHoleMass": "1.2e-3",
    "MinFoFMassForNewSeed": "5.0",
-   "dyn_seed_Msun": 12000000.0,
    "threshold_Msun_h": 50000000000.0,
    "required": false,
-   "note": "optional crossed case (plan S6)"
+   "note": "optional crossed case (plan S6)",
+   "dyn_seed_Msun_h": 12000000.0,
+   "nodes": 8
   },
   {
    "label": "TDE_ZF4_H_X",
@@ -170,15 +180,20 @@
    "jobname": "zf4Hx",
    "set": {
     "InitCondFile": "$HOME/scratch1/MultiZoomICs/ics_targethalos_LtU_L500_M13.00-13.25_H5_Zf4_000",
-    "DynamicalSeedBlackHoleMass": "8.1288e-4",
+    "DynamicalSeedBlackHoleMass": "1.2e-3",
     "MinFoFMassForNewSeed": "5.0"
    },
-   "DynamicalSeedBlackHoleMass": "8.1288e-4",
+   "DynamicalSeedBlackHoleMass": "1.2e-3",
    "MinFoFMassForNewSeed": "5.0",
-   "dyn_seed_Msun": 12000000.0,
    "threshold_Msun_h": 50000000000.0,
    "required": false,
-   "note": "optional crossed case (plan S6)"
+   "note": "optional crossed case (plan S6)",
+   "dyn_seed_Msun_h": 12000000.0,
+   "nodes": 12
   }
- ]
+ ],
+ "nodes": {
+  "ZF4_L": 8,
+  "ZF4_H": 12
+ }
 }
