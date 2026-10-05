@@ -62,7 +62,7 @@
   "MinDistanceForMergingBlackHoles": "2",
   "DesNumNgbBlackHole": "156",
   "softening_comoving_hr_Mpc_h": 0.0004,
-  "softening_maxphys_hr_Mpc_h": 0.0002,
+  "softening_maxphys_hr_Mpc_h": 0.0004,
   "outputs": "z=6, 4, then every 100 Myr from z=3 to z=0 (120 snapshots)"
  },
  "runs": [

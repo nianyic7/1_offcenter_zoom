@@ -51,7 +51,7 @@ def main():
     exp = {"DynamicalSeedBlackHoleMass": "1.2e-3", "MinFoFMassForNewSeed": "5.0",
            "LogMassRatioFullDFD": "1.0", "NewTag": "7", "MinDistanceForMergingBlackHoles": "2",
            "DesNumNgbBlackHole": "156", "BoxSize": "500.0", "TimeBegin": "0.015625", "SeedBlackHoleMass": "5.0e-5",
-           "SofteningComovingType1": "0.0004", "SofteningMaxPhysType1": "0.0002"}
+           "SofteningComovingType1": "0.0004", "SofteningMaxPhysType1": "0.0004", "SofteningMaxPhysType0": "0.0004"}
     for k, v in exp.items():
         if val(k) != v:
             fails.append("param %s = %r, expected %r" % (k, val(k), v))

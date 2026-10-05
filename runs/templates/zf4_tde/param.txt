@@ -150,8 +150,8 @@ UnitVelocity_in_cm_per_s 1e5                ;  1 km/sec
 GravityConstantInternal  0
 
 %---- Gravitational softening lengths
-%  ZF4 ladder (user decision 2026-10-05): classes 0/1 (gas, high-res DM, stars) 0.4 kpc/h comoving, max-phys 0.2 kpc/h (TNG factor 2,
-%  ASSUMED - see doc/setup_notes.md S4); class 2 = BH 0.4 kpc/h; classes 3/4/5 for the 64x type-2 and coarse type-3 particles unchanged.
+%  ZF4 ladder (user decisions 2026-10-05 and 2026-10-04 Bridges): classes 0/1 (gas, high-res DM, stars) 0.4 kpc/h comoving at all z
+%  (max-phys = comoving, no extra physical cap; doc/setup_notes.md S4); class 2 = BH 0.4 kpc/h; classes 3/4/5 (64x type-2, coarse type-3) unchanged.
 MinimumComovingHydroSoftening    0.00005
 
 AdaptiveHydroSofteningSpacing   1.2
@@ -166,8 +166,8 @@ SofteningComovingType3 0.0031
 SofteningComovingType4 0.0125
 
 SofteningComovingType5 0.05
-SofteningMaxPhysType0            0.0002
-SofteningMaxPhysType1            0.0002
+SofteningMaxPhysType0            0.0004
+SofteningMaxPhysType1            0.0004
 SofteningMaxPhysType2            0.0004
 
 SofteningMaxPhysType3  0.0031
