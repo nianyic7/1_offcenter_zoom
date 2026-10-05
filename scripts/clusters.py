@@ -15,8 +15,8 @@ SITES = {
     "bridges": dict(                                                 # PSC Bridges-2 RM nodes (verified 2026-09-29)
         homes=("/jet/home/nianyic",), partition="RM", account="phy240015p",
         account_required=True,
-        tasks_per_node=64, node_mem_gb=256, max_mem_mb=3600,         # 128 cores/node, 240 GB usable; 64 x 3600 MB
-                                                                     # (bhspin L35n540 at 64/node peaked at 2.3 GB/task)
+        tasks_per_node=64, node_mem_gb=256, node_mem_limit_mb=240000, max_mem_mb=3200,  # 128 cores/node, cgroup limit 240000 MB/node;
+                                                                     # 64 x 3200 MB (3600 was OOM-killed after ~39 h in 0_feedback, 2026-10-03)
         modules="modules_br2.sh",                                    # loads openmpi 4.0.5 again after fftw (which pulls in a broken 3.1.6)
         walltime="48:00:00", time_limit_cpu=190000,                  # RM max 48 h; 85% of 190000 s = 44.9 h, 3 h margin for the restart write
         limits="QOS rm: 25600 cores (200 RM nodes) per user, 5000 submitted jobs; RM walltime max 48 h"),

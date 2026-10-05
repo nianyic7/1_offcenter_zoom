@@ -42,6 +42,10 @@ try:
     S.check(dict(S.SITES["bridges"], account=None)); fails.append("unfilled account accepted")
 except S.SiteError:
     pass
+# Bridges RM cgroup limit is 240000 MB/node; 64 x 3600 MB (150 MB/task outside the arena) was OOM-killed after ~39 h in 0_feedback
+b = S.SITES["bridges"]
+head = b["node_mem_limit_mb"] / b["tasks_per_node"] - b["max_mem_mb"] if "node_mem_limit_mb" in b else -1
+if head < 300: fails.append(f"bridges MaxMemSize leaves {head:.0f} MB/task below the node cgroup limit (need >= 300)")
 if fails:
     print("FAIL test_clusters:"); [print("  " + f) for f in fails]; sys.exit(1)
-print("PASS test_clusters: detect by $HOME, job/compile/param rewrite per cluster (modules, walltime, TimeLimitCPU; idempotent), unfilled settings rejected")
+print("PASS test_clusters: detect by $HOME, job/compile/param rewrite per cluster (modules, walltime, TimeLimitCPU; idempotent), unfilled settings rejected, Bridges node memory budget")
