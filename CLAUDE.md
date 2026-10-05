@@ -13,7 +13,7 @@ ICs (the user copies them from `/virgotng/mpa/LtU/ICs/FlagshipZoomICs/`); ask be
   (Bridges: symlink to the `/ocean` project dir), same `~/arepo` (`BHspin_feedback_NC`, >= a71e393f83; Bridges `~/arepo -> ~/arepo_my`).
   Per-cluster settings: `scripts/clusters.py` (detected from `$HOME`, override `$OFFCENTER_CLUSTER`); `scripts/make_run.py --cluster/--nodes`.
   A run lives on one cluster from start to finish (`Cluster` column in `doc/run_status.md`). **First-round runs go to Bridges-2** (Orion quota full).
-- Bridges-2: RM, account phy240015p, 64 tasks/node (MaxMemSize 3600), 48 h (TimeLimitCPU 190000 -> Arepo stops at 44.9 h), `~/arepo/modules_br2.sh`,
+- Bridges-2: RM, account phy240015p, 64 tasks/node (MaxMemSize 3200; 3600 was OOM-killed in 0_feedback), 48 h (TimeLimitCPU 190000 -> Arepo stops at 44.9 h), `~/arepo/modules_br2.sh`,
   low fairshare (long queue waits), home quota ~full (25 GiB), `lfs quota -p 554803 /ocean`. Orion: p.exclusive, 112 tasks/node, 23 h, 30-node/6-job cap.
 
 ## Layout
@@ -36,7 +36,7 @@ ICs (the user copies them from `/virgotng/mpa/LtU/ICs/FlagshipZoomICs/`); ask be
   `RELATIVE_VELOCITY_CRITERION_FOR_MERGERS`, `OUTPUT_BLACKHOLE_KINEMATICS`; `BH_NEW_CENTERING` off; `REDUCE_DFD_WITH_BH_GROWTH` off; spin tracking only.
   No `BH_TLA_*`. All flags exist in `~/arepo`; no code change.
 - ZF4 ICs: m_DM,hr = 2.08e-4 (~TNG50-2), z_start 63, 500 Mpc/h parent (MTNG-L500-4320-A), bins are parent **FoF GroupMass**. Softening (user, 2026-10-05): 0.4 kpc/h comoving
-  for classes 0–2 (`0.0004`), max-phys `0.0002` for 0/1 (assumed TNG factor 2, S4), coarse classes unchanged. Merge radius = 2 x class 0 = 0.8 kpc/h comoving.
+  for classes 0–2 (`0.0004`), max-phys `0.0004` too (no physical cap; user, 2026-10-04, S4), coarse classes unchanged. Merge radius = 2 x class 0 = 0.8 kpc/h comoving.
 - Outputs: z=6, 4, then every 100 Myr from z=3 (120 snapshots, 8 files each; user 2026-10-05). Nodes: ZF4_L 8, ZF4_H 12 (`make_run.py --nodes`).
 - `blackhole_details_*.txt` = 18 columns (ID, t, M_BH, mdot, rho, cs, pos[3], vel[3], acc[3], DF acc[3]); mergers in `blackhole_mergers/`.
 

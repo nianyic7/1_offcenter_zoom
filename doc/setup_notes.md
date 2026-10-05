@@ -15,7 +15,7 @@ cluster set-up. The plan (`off_nuclear_tde_first_round_runs.md`) asked for each 
 | `OUTPUT_BLACKHOLE_KINEMATICS` | `blackhole_mdot.cc:1086` | `blackhole_details_<task>.txt` lines become `BH=ID time BH_Mass mdot rho cs x y z vx vy vz ax ay az [DFD_ax DFD_ay DFD_az]` (18 columns with BH_DF_DISCRETE) | none |
 | `BH_NEW_CENTERING` | removed | Template-Config: "Please switch off BH_NEW_CENTERING" with BH_DF_DISCRETE | `BlackHoleCenteringMassMultiplier` must then be commented out |
 | `REDUCE_DFD_WITH_BH_GROWTH` | off (plan) | sigmoid reduction of DF with BH/particle mass ratio; "not extensively tested" | — |
-| `OUTPUT_HOST_PROPERTIES_FOR_BH_MERGERS` | **OPEN**, off | writes host-halo masses into the merger log (`FdBlackHolesMergerHosts`) — covers the plan's "host mass at merger" output | none; untested here |
+| `OUTPUT_HOST_PROPERTIES_FOR_BH_MERGERS` | off (user, 2026-10-04) | writes host-halo masses into the merger log (`FdBlackHolesMergerHosts`) — covers the plan's "host mass at merger" output | none; untested here |
 
 Earlier use of the same flag set: `~/bhspin/M11.00_H5_Zf2/{dfonly,dfspin01,dfspin06}` (Zf2, `DynamicalSeedBlackHoleMass 1e-3`,
 `SeedBlackHoleMass 5e-5`, `MinFoFMassForNewSeed 5.0`, no `MERGE_BHS_WITHIN_GAS_SOFTENING`).
@@ -51,11 +51,11 @@ Parent mass bins are therefore FoF mass, not M200c (plan asked for the conventio
 groups carry everything else. Particle counts: see `run_manifest.json`. Gas is generated at start-up (`GENERATE_GAS_IN_ICS`, `SPLIT_PARTICLE_TYPE=2+4+8`
 splits types 1,2,3), so total ~ 2 x N_hr + N_type2 + N_type3 ≈ 92M (L) / 126M (H) vs 362M for H16_Zf2.
 
-## S4. Softenings (DECIDED 2026-10-05; max-phys value ASSUMED)
+## S4. Softenings (DECIDED 2026-10-05; max-phys DECIDED 2026-10-04 on Bridges: 0.0004, no cap)
 
-User: "0.4 kpc/h comoving". Template: classes 0/1 (gas, high-res DM, stars) `SofteningComovingType0/1 0.0004`, `SofteningMaxPhysType0/1 0.0002`
-(the TNG convention max-phys = comoving/2 was **assumed**, not stated by the user; TNG50-1 uses 0.00039/0.000195 for a 7x smaller m_DM —
-confirm or set 0.0004/0.0004), class 2 (BH) 0.0004/0.0004, `MinimumComovingHydroSoftening 0.00005` (TNG ratio 0.128 x DM softening).
+User: "0.4 kpc/h comoving". Template: classes 0/1 (gas, high-res DM, stars) `SofteningComovingType0/1 0.0004`, `SofteningMaxPhysType0/1 0.0004`
+(user, 2026-10-04: literal reading, 0.4 kpc/h comoving at all z = 0.59 kpc physical at z=0 = the TNG50-2 z=0 value at the same m_DM; the
+earlier template value 0.0002 was an assumed TNG factor-2 cap and never ran), class 2 (BH) 0.0004/0.0004, `MinimumComovingHydroSoftening 0.00005` (TNG ratio 0.128 x DM softening).
 Classes 3/4/5 (0.0031 / 0.0125 / 0.05, no cap) unchanged: with `INDIVIDUAL_GRAVITY_SOFTENING=4+8+32` (types 2, 3, 5 mass-scaled) the code picks
 per particle the class nearest in log to eps_1 (m/m_1)^(1/3); type 2 is 64 x m_hr -> 4 x 0.0004 = 0.0016 -> class 3 (0.0031, nearest). BHs (type 5)
 are also mass-scaled: a 6e-4 dynamical mass gives (m/m_1)^(1/3) = 1.43 -> 0.00057 -> class 0/1/2 (0.0004). Merger radius = 2 x class 0 =
@@ -66,13 +66,13 @@ are also mass-scaled: a 6e-4 dynamical mass gives (m/m_1)^(1/3) = 1.43 -> 0.0005
 Template `outputs.txt`: z = 6, 4, then every 100 Myr from z = 3 (t = 2.15 Gyr) to z = 0 (13.80 Gyr): 120 snapshots, 8 files each
 (user: 50 Myr "a bit too much", 100 Myr for now). At ~100M particles a full snapshot is ~10–15 GB -> 1.2–1.8 TB per run, 6 runs ~7–11 TB on
 `/ocean` (12 TiB free on 2026-10-02): check the quota before the chains run far. Generated with Planck15 (Om 0.3089, h 0.6774) in
-`PROGRESS.md` 2026-10-05; the per-BH-timestep details file remains the sub-Myr source for BH orbits. Still open: `OUTPUT_HOST_PROPERTIES_FOR_BH_MERGERS`. Galaxy centres over time need snapshots or SubFind catalogs: `FOF`+`SUBFIND` run at
+`PROGRESS.md` 2026-10-05; the per-BH-timestep details file remains the sub-Myr source for BH orbits. `OUTPUT_HOST_PROPERTIES_FOR_BH_MERGERS` stays off (user, 2026-10-04; host masses from the SubFind catalogues). Galaxy centres over time need snapshots or SubFind catalogs: `FOF`+`SUBFIND` run at
 every snapshot (`TimeBetOnTheFlyFoF 1.03` also runs FoF on the fly for seeding only). BH mergers are logged in `blackhole_mergers/` by default.
 
 ## S6. Cluster / resources (DECIDED 2026-10-05: 8 nodes L, 12 nodes H)
 
 Bridges-2 (the target): settings verified in 0_feedback on 2026-09-29 and copied into `scripts/clusters.py` (RM, account phy240015p,
-64 tasks/node, MaxMemSize 3600, 48 h, TimeLimitCPU 190000, `~/arepo/modules_br2.sh`). H16_Zf2 (362M particles) runs there on 16 nodes with
+64 tasks/node, MaxMemSize 3200 (was 3600; OOM-killed in 0_feedback 2026-10-03, changed here 2026-10-04), 48 h, TimeLimitCPU 190000, `~/arepo/modules_br2.sh`). H16_Zf2 (362M particles) runs there on 16 nodes with
 peak 2.9 GB/task. User choice: ZF4_L on 8 nodes, ZF4_H on 12 nodes (Bridges: 512 / 768 tasks; template `-N 8`, use `--nodes 12` for H).
 Memory is then ~1 GB/task; the first job measures pace (plan S3.8). All three variants of a bin stay on that layout. Bridges caveats
 (0_feedback PROGRESS 2026-10-02): home quota 24.84/25 GiB nearly full, `/ocean` project 12 TiB free; restart sets for H16_Zf2 were 430 GB each.

@@ -1,5 +1,33 @@
 # PROGRESS
 
+## 2026-10-04 (Bridges-2) — six first-round runs configured and submitted
+### Done
+- Pre-conditions checked: both ZF4 ICs in `~/scratch1/MultiZoomICs/` (headers read: 36837120 / 54058240 type-1, masstab 2.0764e-4, a=0.015625),
+  `~/scratch1/TNG_tables`, `~/arepo` at a71e393f83 (clean), tests pass.
+- User decisions (2026-10-04): max-phys softening for classes 0/1 = **0.0004** (no physical cap; 0.4 kpc/h comoving at all z);
+  `OUTPUT_HOST_PROPERTIES_FOR_BH_MERGERS` **off**; all six started at once; **one 48 h job per run** ("let's try 48 hours"), 8 / 12 nodes.
+- `MaxMemSize` 3600 -> **3200** for Bridges (`scripts/clusters.py`, docs, test): 0_feedback zooms were OOM-killed at 3600 after ~39 h
+  (cgroup limit 240000 MB/node; user decision there 2026-10-03). The ZF4 runs need far less (~1 GB/task expected).
+- Six run dirs made with `make_run.py` from the manifest (`runs/ZF4_{L,H}/{fid,dyn12,seed50}`); each variant differs from its `fid` in exactly
+  one param line; stale TimeLimitCPU/MaxMemSize comments corrected by hand. Param key set checked against the running 0_feedback Bridges zoom
+  (only `DynamicalSeedBlackHoleMass`, `MinDistanceForMergingBlackHoles` added, `BlackHoleCenteringMassMultiplier` dropped: match the code guards).
+- Built once in `runs/ZF4_L/fid` (275 s, five dynamics flags in `arepoconfig.h`, no `BH_NEW_CENTERING`); binary copied to the other five (user:
+  compile once for identical Configs). Pre-flight paths OK.
+- Submitted 2026-10-04 23:53 EDT: 47426651 L_FID, 47426652 L_DYN12, 47426653 L_SEED50 (8 nodes), 47426654 H_FID, 47426655 H_DYN12,
+  47426656 H_SEED50 (12 nodes); all pending. Four 16-node 0_feedback chains (submitted 10-02) are ahead in the same account.
+### Failed / notes
+- `mpiexec -np 1 ./Arepo` on a login node hangs without output (tried as a param-parse smoke test): do not retry; check params statically.
+- `pkill -f <pattern>` from the agent shell kills the shell itself (pattern is in its own command line): kill by PID.
+### Next
+- Do not edit `param.txt`/`Config.sh`/`Arepo` in the six run dirs while jobs are pending: `run.sh` copies them at job start.
+- When jobs start (queue wait was ~62 h for 16-node jobs on 10-02): verify start-up within ~5 min (workflow §2.5: READIC 36837120 / 54058240,
+  masstab 0.00020764, no `not found`/`Terminate`, `Sync-Point 1`), then memory (`memory.txt`), pace, 18-column `blackhole_details`. Set the rows
+  to `running` in `doc/run_status.md`. After the job: `sacct -j <job> -o JobID,State,MaxRSS` (OOM shows as COMPLETED), record z reached, pace
+  and peak memory; ask the user whether to chain `restart.sh` (not queued: this round is a 48 h trial).
+- Storage: `/ocean` project 91.1 of 102.5 TB used (11.4 TB free) on 10-04. Enough for the 48 h segments (restart sets + few snapshots, ~2 TB),
+  not for six runs to z=0 (7–11 TB snapshots + restart sets) next to the 0_feedback zooms: raise with the user before chaining.
+- Commit is local only: ask the user before pushing.
+
 ## 2026-10-05 (Orion) — decisions applied
 ### Done
 - User pushed `main` to https://github.com/nianyic7/1_offcenter_zoom (the agent's push was blocked by the permission classifier; ask the user to push).
@@ -9,7 +37,7 @@
   3. Outputs every 100 Myr from z=3 (+ z=6, 4): 120 snapshots (`runs/templates/zf4_tde/outputs.txt`, Planck15 t(a)); ~1.2–1.8 TB per run.
   4. Nodes: ZF4_L 8, ZF4_H 12 (template `-N 8`; `--nodes 12` for H).
 - Tests updated and passing.
-### Still open (small; confirm with the user when configuring)
+### Still open (all three settled 2026-10-04 on Bridges, see above)
 - Max-phys softening for classes 0/1: 0.0002 (assumed) or 0.0004 (no extra physical cap).
 - Whether to add `OUTPUT_HOST_PROPERTIES_FOR_BH_MERGERS` (host masses in the merger log; untested here).
 - Start order: both FID runs first as validation segments, or all six at once.

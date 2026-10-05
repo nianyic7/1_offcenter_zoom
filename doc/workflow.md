@@ -25,7 +25,7 @@ into the scratch mirror and runs there, so the mirror is self-describing.
 
 0. **Pre-conditions** (first time on a cluster): `git pull --rebase`; `~/scratch1` exists (Bridges: symlink to the project `/ocean` dir);
    both IC files present; `~/scratch1/TNG_tables` present; `~/arepo` on the right commit; `python3 scripts/test_clusters.py` passes;
-   the remaining open items in `PROGRESS.md` are settled with the user (max-phys softening, merger-host log flag).
+   open items in `PROGRESS.md` are settled with the user (max-phys softening and merger-host log flag: settled 2026-10-04).
 1. **Make the dir** from the manifest, e.g. for L/DYN12 on Bridges:
    ```
    python3 scripts/make_run.py --template runs/templates/zf4_tde --dest runs/ZF4_L/dyn12 --jobname zf4Ldyn \
@@ -36,7 +36,8 @@ into the scratch mirror and runs there, so the mirror is self-describing.
    `make_run.py` rewrites partition/account/tasks-per-node/walltime/module script/MaxMemSize/TimeLimitCPU/home paths for the cluster.
 2. **Diff against fid**: `diff runs/ZF4_L/fid/param.txt runs/ZF4_L/dyn12/param.txt` and the same for `Config.sh` (must be identical) and `run.sh`
    (job name and outdir only).
-3. **Compile**: `bash compile.sh > compile.log 2>&1`; `tail -1 compile.log` is the link line; `grep -n "BH_DF_DISCRETE\|HIGHER_DYNAMICAL\|MERGE_BHS\|RELATIVE_VEL\|KINEMATICS\|BH_NEW_CENTERING" build/arepoconfig.h`
+3. **Compile once per distinct `Config.sh`** (user, 2026-10-04): the six first-round runs share one Config (only the first comment line differs), so
+   build in `runs/ZF4_L/fid` and `cp -p` its `Arepo` into the other dirs (check `md5sum`). `bash compile.sh > compile.log 2>&1` (~5 min on a login node); `tail -1 compile.log` is the link line; `grep -n "BH_DF_DISCRETE\|HIGHER_DYNAMICAL\|MERGE_BHS\|RELATIVE_VEL\|KINEMATICS\|BH_NEW_CENTERING" build/arepoconfig.h`
    must show the five dynamics flags and no `BH_NEW_CENTERING`. Record the `~/arepo` commit in `doc/run_status.md`.
 4. **Pre-flight**: every path in `param.txt` exists:
    `for f in $(grep -E "^(InitCondFile|TreecoolFile|YieldTablePath|PreEnrichAbundanceFile|CoolingTablePath|SelfShieldingFile|PhotometricsTablePath|TreecoolFileAGN)\s" param.txt | awk '{print $2}'); do ls -d $f* >/dev/null || echo MISSING $f; done`
@@ -69,6 +70,6 @@ live: `grep ^Sync-Point ~/scratch1/1_offcenter_zoom/runs/<set>/<variant>/log-<jo
 
 ## 6. Pitfalls (from 0_feedback)
 - kpc/h vs Mpc/h: everything here is Mpc/h (TNG reference files are kpc/h). `MaxSfrTimescale 0.00227`, `NSNS_MassPerEvent 5000` (Msun, code converts).
-- `MaxMemSize 3600 x 64` on Bridges RM, `4000 x 112` on Orion; do not raise tasks/node.
+- `MaxMemSize 3200 x 64` on Bridges RM (cgroup limit 240000 MB/node; 3600 was OOM-killed after ~39 h in 0_feedback, 2026-10-03), `4000 x 112` on Orion; do not raise tasks/node. Slurm lists an OOM-killed job as COMPLETED: check `sacct -j <job> -o JobID,State,MaxRSS`.
 - `sbatch` returns even when the queue is full: check `squeue` and the log before recording "running".
 - Bridges fairshare is low: 16-node jobs waited 62–67 h in the queue on 2026-09-30. Smaller (4–6 node) jobs should wait less — record it.
